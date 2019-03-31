@@ -1,0 +1,45 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<div *ngIf="showHome" id="popup" class="overlay">
+  <div class="popup">
+    <a class="close" id="close" href="#">&times;</a>
+    <div class="content">
+      <div class="text">
+        <p><span>Total of : </span><span id="total">{{total}}</span> objects</p>
+      </div>
+      <div class="text">
+        <p><span>From: </span><input type="text" id="from" placeholder={{startDate}} [(ngModel)]="startDate"></p>
+        <p><span>To: </span><input type="text" id="to" placeholder={{endDate}} [(ngModel)]="endDate"></p>
+        <button (click)="buttonClick()">GET</button>
+      </div>
+      <div class="text">
+        <p><span class="stylish-text">Furthest: </span><span id="furthest">{{stats.furthest}}</span> km</p>
+        <p><span class="stylish-text">Closest: </span><span id="closest">{{stats.closest}}</span> km</p>
+      </div>
+      <div class="text">
+        <p><span class="stylish-text">Biggest: </span><span id="biggest">{{stats.biggest}}</span> m</p>
+        <p><span class="stylish-text">Smallest: </span><span id="smallest">{{stats.smallest}}</span> m</p>
+      </div>
+      <div class="text">
+        <p><span class="stylish-text">Fastest: </span><span id="fastest">{{stats.fastest}}</span> km/h</p>
+        <p><span class="stylish-text">Slowest: </span><span id="slowest">{{stats.slowest}}</span> km/h</p>
+      </div>
+      <div class="text">
+        <ul>
+          <li>
+            <div> distance from Earth to object:</div>
+            <div>  200000 kilometers for 1 pixel</div>
+          </li>
+          <li><div> diameters:</div>
+            <div> 25 meters for 1 pixel </div>
+          </li>
+          <li>
+            <div> Animation speed:</div>
+            <div> 10000km / velocity * 50 for 1 second</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<app-plan *ngIf="showHome" [objectsDiv]="objectsDiv"></app-plan>
+
