@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter {
+  background: #eee;
+  flex: 1;
+  min-height: 64px;
+  padding: 8px 24px 0;
+  border: black;
+}
+
+.text-right {
+  text-align: right;
+}
