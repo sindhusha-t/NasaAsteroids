@@ -1,3 +1,15 @@
-<p>
-Graph works!
-</p>
+<svg height="100%" width="100%" ng-if="colours">
+  <g transform="translate(80, 20)">
+    <circle *ngFor="let a of asteroids; let i = index" [attr.cx]="scaleLinearX(a.velocity)" [attr.cy]="scaleLinearY(a.distance)" [ngStyle]="{ fill: colours(category(a)) }" class="dot" r="3.5" matTooltip="{{a.name}}"></circle>
+    <g class="axis x-axis" [attr.transform]="'translate(0,' + height + ')'">
+      <text [attr.x]="width" y="-6">Velocity (kph)</text>
+    </g>
+    <g class="axis y-axis">
+      <text dy=".71em" transform="rotate(-90)" y="6">Distance (km)</text>
+    </g>
+    <g *ngFor="let c of colourDomain; let i = index" [attr.transform]="'translate(0,' + i*20 + ')'" class="legend">
+      <rect [attr.x]="width - 18" width="18" height="18" [ngStyle]="{ fill: colours(c) }"></rect>
+      <text [attr.x]="width - 24" y="9" dy=".35em" text-anchor="end" >{{c}}</text>
+    </g>
+  </g>
+</svg>
