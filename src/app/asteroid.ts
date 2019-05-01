@@ -4,5 +4,6 @@ export class Asteroid {
   velocity: number;
   distance: number;
   radius: number;
+  magnitude: number;
   hazardous: string;
 }

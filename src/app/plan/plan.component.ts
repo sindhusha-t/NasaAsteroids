@@ -12,6 +12,7 @@ export class PlanComponent implements OnInit {
   constructor( private service: AsteroidsService) { }
 
   ngOnInit() {
+
   }
 
 }

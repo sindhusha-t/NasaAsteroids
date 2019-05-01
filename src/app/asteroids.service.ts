@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {animation} from '@angular/animations';
+import {Asteroid} from './asteroid';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,21 @@ export class AsteroidsService {
   results: any;
   objectsDiv: HTMLElement;
   arrayObjects: any;
+  centerX: number;
+  centerY: number;
+  elementCount = {};
+  url: string;
 
   constructor(private http: HttpClient) {
   }
 
+  setPlanPoints(centerX, centerY) {
+    this.centerX = centerX / 2;
+    this.centerY = centerY / 2;
+  }
+
   getCurrentDate() {
+
     const today = new Date();
     const dd = today.getDate();
     const mm = (today.getMonth() + 1); // January is 0!
@@ -57,6 +68,43 @@ export class AsteroidsService {
     return url + '&api_key=' + 'KOWjS9o7xb6ffafjNh1YtXHvmU5YVRO7br17JPtB'; // use your private key !
   }
 
+  getBrowseUrl() {
+    const url = 'https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=KOWjS9o7xb6ffafjNh1YtXHvmU5YVRO7br17JPtB';
+    return url;
+  }
+
+  getElementCount() {
+    const url = this.getUrl(this.getCurrentDate(), this.getNextWeek());
+    const i = 1;
+    const year = '' + this.getYear(this.getCurrentDate());
+
+    this.doStuff(url, i);
+  }
+
+  doStuff(url, i) {
+
+    if ( i <100 ) {
+      this.getResults(url).then(data => {
+
+        const values = data;
+
+        const year = this.getYearFromUrl(url);
+
+        if (! this.elementCount.hasOwnProperty(year)) {
+          this.elementCount[year] = 0;
+        }
+
+        this.elementCount[year] += values.element_count;
+        url = values.links.prev;
+
+        i += 1;
+        this.doStuff(url, i);
+
+
+      });
+    }
+  }
+
   parseDate(date) {
     if (date.includes('-')) {
       const arr = date.split('-');
@@ -67,6 +115,19 @@ export class AsteroidsService {
     } else {
       return null;
     }
+  }
+
+  getYear(date) {
+    const arr = date.split('-');
+    return arr[0] + '-' + arr[1];
+  }
+
+  getYearFromUrl(url) {
+    const arr1 = url.split('=');
+    const arr2 = arr1[1].split('&');
+    const arr3 = arr2[0].split('-');
+
+    return arr3[0] + '-' + arr3[1];
   }
 
   getResults(url) {
@@ -168,6 +229,7 @@ export class AsteroidsService {
       html += '<ul>' + date;
       for (const result of date.arr ) {
         const name = result.name;
+        const magnitude = result.absolute_magnitude_h;
         const kilometers = result.close_approach_data[0].miss_distance.kilometers;
         const velocity = result.close_approach_data[0].relative_velocity.kilometers_per_hour;
         const diameter = (result.estimated_diameter.meters.estimated_diameter_max
@@ -175,7 +237,9 @@ export class AsteroidsService {
         const p = '<li>name: ' + name + ' ~ diameter: ' + diameter
           + 'm ~ distance: ' + kilometers + 'km ~ velocity: ' + velocity + 'km/h </li>';
         html += p;
-        this.arrayObjects.push( { name, kilometers: parseFloat(kilometers),
+        this.arrayObjects.push( { name,
+                                  magnitude: parseFloat(magnitude),
+                                  kilometers: parseFloat(kilometers),
                                   velocity: parseFloat(velocity),
                                   diameter: parseFloat(String(diameter)), id: index});
         const subDiv = this.drawAsteroids(parseFloat(kilometers), parseFloat(String(diameter)), name, index, parseFloat(velocity));
@@ -188,8 +252,6 @@ export class AsteroidsService {
   }
 
   drawAsteroids(distance, size, title, id, velocity) {
-    const sideLong = this.generateSideLong();
-    const sideLat = this.generateSideLat();
 
     let object;
     object = document.createElement('div');
@@ -205,17 +267,13 @@ export class AsteroidsService {
 
     let objectX = 0;
     let objectY = 0;
-    const centerX = 300;
-    const centerY = 300;
-    // const centerX = $('#plan').offsetWidth / 2;
-    // const centerY = $('#plan').offsetHeight / 2;
 
     if (this.generateSideLong() === 'left') {
-      objectX = centerX - distPixels - (parseInt(object.style.width, 10) / 2) ;
-      objectY = centerY - distPixels - (parseInt(object.style.height, 10) / 2);
+      objectX = this.centerX - distPixels - (parseInt(object.style.width, 10) / 2) ;
+      objectY = this.centerY - distPixels - (parseInt(object.style.height, 10) / 2);
     } else {
-      objectX = centerX + distPixels - (parseInt(object.style.width, 10) / 2) ;
-      objectY = centerY + distPixels - (parseInt(object.style.height, 10) / 2);
+      objectX = this.centerX + distPixels - (parseInt(object.style.width, 10) / 2) ;
+      objectY = this.centerY + distPixels - (parseInt(object.style.height, 10) / 2);
     }
 
     object.style.left = objectX + 'px';
@@ -234,8 +292,8 @@ export class AsteroidsService {
     divCenter = document.createElement('div');
     divCenter.className = 'center';
     divCenter.style.position = 'absolute';
-    divCenter.style.left = '300px';
-    divCenter.style.top = '300px';
+    divCenter.style.left = this.centerX + 'px';
+    divCenter.style.top = this.centerY + 'px';
     divCenter.title = 'Earth';
     return divCenter;
   }
@@ -271,5 +329,37 @@ export class AsteroidsService {
       '-o-animation: spin-' + side + ' ' + Math.round(parseFloat(speed)) + 's linear infinite;' +
       'animation: spin-' + side + ' ' + Math.round(parseFloat(speed)) + 's linear infinite;';
   }
+
+
+  parse(json: any): Asteroid[] {
+    let asteroids = new Array<Asteroid>();
+    Object.values(json.near_earth_objects).forEach((date: Array<any>) => {
+      asteroids = asteroids.concat(date.map(a => this.toAsteroid(a)));
+    });
+    return asteroids;
+  }
+
+  private toAsteroid(json: any): Asteroid {
+    const asteroid = new Asteroid();
+    asteroid.date = new Date(json.close_approach_data[0].close_approach_date);
+    const diameterMax =
+      json.estimated_diameter.kilometers.estimated_diameter_max;
+    const diameterMin =
+      json.estimated_diameter.kilometers.estimated_diameter_min;
+    const diameterAvg = (diameterMax - diameterMin) / 2;
+    asteroid.radius = (diameterMin + diameterAvg) / 2;
+    asteroid.distance = parseFloat(
+      json.close_approach_data[0].miss_distance.lunar
+    );
+
+    asteroid.hazardous = json.is_potentially_hazardous_asteroid ? 'Yes' : 'No';
+    asteroid.name = json.name;
+    asteroid.magnitude = parseFloat(json.absolute_magnitude_h);
+    asteroid.velocity = parseFloat(
+      json.close_approach_data[0].relative_velocity.kilometers_per_second
+    );
+    return asteroid;
+  }
+
 }
 

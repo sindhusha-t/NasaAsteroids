@@ -1,11 +1,20 @@
-<svg height="100%" width="100%" ng-if="colours">
+<div class="text">
+  <p><span>From: </span><input type="text" id="from" placeholder={{startDate}} [(ngModel)]="startDate"></p>
+  <p><span>To: </span><input type="text" id="to" placeholder={{endDate}} [(ngModel)]="endDate"></p>
+  <button mat-button (click)="buttonClick()" color="primary">GET</button>
+</div>
+
+<table height="100%" width="100%">
+<tr height="400" width="600">
+  <td>
+<svg height="100%" width="100%" ng-if="colours" id="chart1">
   <g transform="translate(80, 20)">
-    <circle *ngFor="let a of asteroids; let i = index" [attr.cx]="scaleLinearX(a.velocity)" [attr.cy]="scaleLinearY(a.distance)" [ngStyle]="{ fill: colours(category(a)) }" class="dot" r="3.5" matTooltip="{{a.name}}"></circle>
+    <circle *ngFor="let a of asteroids; let i = index" [attr.cx]="scaleLinearX1(a.velocity)" [attr.cy]="scaleLinearY1(a.distance)" [ngStyle]="{ fill: colours(category(a)) }" class="dot" r="3.5" matTooltip="{{a.name}}"></circle>
     <g class="axis x-axis" [attr.transform]="'translate(0,' + height + ')'">
-      <text [attr.x]="width" y="-6">Velocity (kph)</text>
+      <text [attr.x]="width" y="-6">Velocity (kps)</text>
     </g>
     <g class="axis y-axis">
-      <text dy=".71em" transform="rotate(-90)" y="6">Distance (km)</text>
+      <text dy=".71em" transform="rotate(-90)" y="6">Miss Distance (LU)</text>
     </g>
     <g *ngFor="let c of colourDomain; let i = index" [attr.transform]="'translate(0,' + i*20 + ')'" class="legend">
       <rect [attr.x]="width - 18" width="18" height="18" [ngStyle]="{ fill: colours(c) }"></rect>
@@ -13,3 +22,98 @@
     </g>
   </g>
 </svg>
+  </td>
+
+<td>
+<svg height="100%" width="100%" ng-if="colours" id="chart2">
+  <g transform="translate(80, 20)">
+    <circle *ngFor="let a of asteroids; let i = index" [attr.cx]="scaleLinearX2(a.velocity)" [attr.cy]="scaleLinearY2(a.radius)" [ngStyle]="{ fill: colours(category(a)) }" class="dot" r="3.5" matTooltip="{{a.name}}"></circle>
+    <g class="axis x-axis" [attr.transform]="'translate(0,' + height + ')'">
+      <text [attr.x]="width" y="-6">Velocity (kps)</text>
+    </g>
+    <g class="axis y-axis">
+      <text dy=".71em" transform="rotate(-90)" y="6">Radius (avg km)</text>
+    </g>
+    <g *ngFor="let c of colourDomain; let i = index" [attr.transform]="'translate(0,' + i*20 + ')'" class="legend">
+      <rect [attr.x]="width - 18" width="18" height="18" [ngStyle]="{ fill: colours(c) }"></rect>
+      <text [attr.x]="width - 24" y="9" dy=".35em" text-anchor="end" >{{c}}</text>
+    </g>
+  </g>
+</svg>
+</td>
+  </tr>
+
+  <tr height="400" width="600">
+  <td>
+    <svg height="100%" width="100%" ng-if="colours" id="chart3">
+      <g transform="translate(80, 20)">
+        <circle *ngFor="let a of asteroids; let i = index" [attr.cx]="scaleLinearX3(a.distance)" [attr.cy]="scaleLinearY3(a.radius)" [ngStyle]="{ fill: colours(category(a)) }" class="dot" r="3.5" matTooltip="{{a.name}}"></circle>
+        <g class="axis x-axis" [attr.transform]="'translate(0,' + height + ')'">
+          <text [attr.x]="width" y="-6">Miss Distance (LU)</text>
+        </g>
+        <g class="axis y-axis">
+          <text dy=".71em" transform="rotate(-90)" y="6">Radius (avg km)</text>
+        </g>
+        <g *ngFor="let c of colourDomain; let i = index" [attr.transform]="'translate(0,' + i*20 + ')'" class="legend">
+          <rect [attr.x]="width - 18" width="18" height="18" [ngStyle]="{ fill: colours(c) }"></rect>
+          <text [attr.x]="width - 24" y="9" dy=".35em" text-anchor="end" >{{c}}</text>
+        </g>
+      </g>
+    </svg>
+  </td>
+    <td>
+      <svg height="400" width="600" ng-if="colours" id="chart4">
+        <g transform="translate(80, 20)">
+          <circle *ngFor="let a of asteroids; let i = index" [attr.cx]="scaleLinearX4(a.distance)" [attr.cy]="scaleLinearY4(a.magnitude)" [ngStyle]="{ fill: colours(category(a)) }" class="dot" r="3.5" matTooltip="{{a.name}}"></circle>
+          <g class="axis x-axis" [attr.transform]="'translate(0,' + height + ')'">
+            <text [attr.x]="width" y="-6">Miss Distance (LU)</text>
+          </g>
+          <g class="axis y-axis">
+            <text dy=".71em" transform="rotate(-90)" y="6">Magnitude</text>
+          </g>
+          <g *ngFor="let c of colourDomain; let i = index" [attr.transform]="'translate(0,' + i*20 + ')'" class="legend">
+            <rect [attr.x]="width - 18" width="18" height="18" [ngStyle]="{ fill: colours(c) }"></rect>
+            <text [attr.x]="width - 24" y="9" dy=".35em" text-anchor="end" >{{c}}</text>
+          </g>
+        </g>
+      </svg>
+    </td>
+</tr>
+
+  <tr height="100%" width="100%">
+    <td>
+      <svg height="100%" width="100%" ng-if="colours" id="chart5">
+        <g transform="translate(80, 20)">
+          <circle *ngFor="let a of asteroids; let i = index" [attr.cx]="scaleLinearX5(a.radius)" [attr.cy]="scaleLinearY5(a.magnitude)" [ngStyle]="{ fill: colours(category(a)) }" class="dot" r="3.5" matTooltip="{{a.name}}"></circle>
+          <g class="axis x-axis" [attr.transform]="'translate(0,' + height + ')'">
+            <text [attr.x]="width" y="-6">Radius (avg km)</text>
+          </g>
+          <g class="axis y-axis">
+            <text dy=".71em" transform="rotate(-90)" y="6">Magnitude</text>
+          </g>
+          <g *ngFor="let c of colourDomain; let i = index" [attr.transform]="'translate(0,' + i*20 + ')'" class="legend">
+            <rect [attr.x]="width - 18" width="18" height="18" [ngStyle]="{ fill: colours(c) }"></rect>
+            <text [attr.x]="width - 24" y="9" dy=".35em" text-anchor="end" >{{c}}</text>
+          </g>
+        </g>
+      </svg>
+    </td>
+    <td>
+      <svg height="100%" width="100%" ng-if="colours" id="chart6">
+        <g transform="translate(80, 20)">
+          <circle *ngFor="let a of asteroids; let i = index" [attr.cx]="scaleLinearX6(a.velocity)" [attr.cy]="scaleLinearY6(a.magnitude)" [ngStyle]="{ fill: colours(category(a)) }" class="dot" r="3.5" matTooltip="{{a.name}}"></circle>
+          <g class="axis x-axis" [attr.transform]="'translate(0,' + height + ')'">
+            <text [attr.x]="width" y="-6">Velocity (kps)</text>
+          </g>
+          <g class="axis y-axis">
+            <text dy=".71em" transform="rotate(-90)" y="6">Magnitude</text>
+          </g>
+          <g *ngFor="let c of colourDomain; let i = index" [attr.transform]="'translate(0,' + i*20 + ')'" class="legend">
+            <rect [attr.x]="width - 18" width="18" height="18" [ngStyle]="{ fill: colours(c) }"></rect>
+            <text [attr.x]="width - 24" y="9" dy=".35em" text-anchor="end" >{{c}}</text>
+          </g>
+        </g>
+      </svg>
+    </td>
+  </tr>
+</table>

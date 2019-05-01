@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import {AsteroidsTableComponent} from './asteroids-table/asteroids-table.component';
 import {AsteroidsGraphComponent} from './asteroids-graph/asteroids-graph.component';
 import {Asteroids3DComponent} from './asteroids3-d/asteroids3-d.component';
+import {PlotsComponent} from './plots/plots.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: 'asteroids/graph',
     component: AsteroidsGraphComponent
+  },
+  {
+    path: 'asteroids/plots',
+    component: PlotsComponent
   },
   {
     path: '',

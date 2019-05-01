@@ -25,12 +25,18 @@ export class PopupComponent implements OnInit {
   ngOnInit() {
     this.showLoader = true;
     this.showHome = false;
+
+    const plan = document.getElementById('plan');
+    this.service.setPlanPoints(plan.offsetWidth, plan.offsetHeight);
+
     this.startDate = this.service.getCurrentDate();
     this.endDate = this.service.getNextWeek();
     this.doStuff();
   }
 
   doStuff() {
+    this.showLoader = true;
+    this.showHome = false;
     this.url = this.service.getUrl(this.startDate, this.endDate);
     this.service.getResults(this.url).then(() => {
       this.total = this.service.getTotalObjects();
@@ -49,6 +55,3 @@ export class PopupComponent implements OnInit {
   }
 
 }
-
-
-

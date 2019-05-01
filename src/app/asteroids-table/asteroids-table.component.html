@@ -1,3 +1,9 @@
+
+<div class="text">
+  <p><span>From: </span><input type="text" id="from" placeholder={{startDate}} [(ngModel)]="startDate"></p>
+  <p><span>To: </span><input type="text" id="to" placeholder={{endDate}} [(ngModel)]="endDate"></p>
+  <button (click)="buttonClick()">GET</button>
+</div>
 <mat-form-field class="filter">Filter
   <input matInput (keyup)="applyFilter($event.target.value)">
 </mat-form-field>
@@ -15,7 +21,7 @@
     <mat-cell *matCellDef="let asteroid">{{asteroid.hazardous}}</mat-cell>
   </ng-container>
   <ng-container matColumnDef="distance">
-    <mat-header-cell *matHeaderCellDef mat-sort-header class="text-right">Miss Distance (km)</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="text-right">Miss Distance (LU)</mat-header-cell>
     <mat-cell *matCellDef="let asteroid" class="text-right">{{asteroid.distance | number : '1.2-2'}}</mat-cell>
   </ng-container>
   <ng-container matColumnDef="radius">
@@ -23,8 +29,12 @@
     <mat-cell *matCellDef="let asteroid" class="text-right">{{asteroid.radius | number : '1.3-3'}}</mat-cell>
   </ng-container>
   <ng-container matColumnDef="velocity">
-    <mat-header-cell *matHeaderCellDef mat-sort-header class="text-right">Velocity (kph)</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="text-right">Velocity (kps)</mat-header-cell>
     <mat-cell *matCellDef="let asteroid" class="text-right">{{asteroid.velocity | number : '1.2-2'}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="magnitude">
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="text-right">Magnitude</mat-header-cell>
+    <mat-cell *matCellDef="let asteroid" class="text-right">{{asteroid.magnitude | number : '1.2-2'}}</mat-cell>
   </ng-container>
   <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: columns;"></mat-row>

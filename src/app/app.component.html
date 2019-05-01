@@ -1,1 +1,16 @@
-<app-popup></app-popup>
+<mat-toolbar color="accent">
+  <button mat-button routerLink="/">
+    <span>List of Asteroids</span>
+  </button>
+  <button mat-button routerLink="/asteroids/graph">
+    <span>Graph</span>
+  </button>
+  <button mat-button routerLink="/asteroids/plots">
+    <span>plots</span>
+  </button>
+  <button mat-button routerLink="/asteroids/space">
+    <span>Space View</span>
+  </button>
+</mat-toolbar>
+
+<router-outlet></router-outlet>
