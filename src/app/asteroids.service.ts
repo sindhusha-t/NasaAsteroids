@@ -15,6 +15,7 @@ export class AsteroidsService {
   centerY: number;
   elementCount = {};
   url: string;
+  public values: any;
 
   constructor(private http: HttpClient) {
   }
@@ -88,7 +89,7 @@ export class AsteroidsService {
     if ( i <100 ) {
       this.getResults(url).then(data => {
 
-        const values = data;
+        this.values = data;
 
         const year = this.getYearFromUrl(url);
 
@@ -96,8 +97,8 @@ export class AsteroidsService {
           this.elementCount[year] = 0;
         }
 
-        this.elementCount[year] += values.element_count;
-        url = values.links.prev;
+        this.elementCount[year] += this.values.element_count;
+        url = this.values.links.prev;
 
         i += 1;
         this.doStuff(url, i);
